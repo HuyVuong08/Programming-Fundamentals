@@ -5,99 +5,85 @@ using namespace std;
 
 int main(){
 
-    string Data[2][9];
+    int i = 0;
+    float Data[2][9];
 
     ifstream ip("diabetes.csv");
 
     if(!ip.is_open()) std::cout << "ERROR: File Open" << '\n';
 
-    string Pregnancies;
-    string Glucose;
-    string BloodPressure;
-    string SkinThickness;
-    string Insulin;
-    string BMI;
-    string DiabetesPedigreeFunction;
-    string Age;
-    string Outcome;
+    string Pregnancies_string;
+    string Glucose_string;
+    string BloodPressure_string;
+    string SkinThickness_string;
+    string Insulin_string;
+    string BMI_string;
+    string DiabetesPedigreeFunction_string;
+    string Age_string;
+    string Outcome_string;
 
     while(ip.good()){
 
-        getline(ip,Pregnancies,',');
-        getline(ip,Glucose,',');
-        getline(ip,BloodPressure,',');
-        getline(ip,SkinThickness,',');
-        getline(ip,Insulin,',');
-        getline(ip,BMI,',');
-        getline(ip,DiabetesPedigreeFunction,',');
-        getline(ip,Age,',');
-        getline(ip,Outcome,'\n');
+        getline(ip,Pregnancies_string,',');
+        getline(ip,Glucose_string,',');
+        getline(ip,BloodPressure_string,',');
+        getline(ip,SkinThickness_string,',');
+        getline(ip,Insulin_string,',');
+        getline(ip,BMI_string,',');
+        getline(ip,DiabetesPedigreeFunction_string,',');
+        getline(ip,Age_string,',');
+        getline(ip,Outcome_string,'\n');
 
-        for (int i = 0; i < 30; i ++)
-        {
-            for (int j = 0; i < 9; j ++)
-            {
-                if (j = 0)
-                    Data[i][j] = Pregnancies;
-                else if (j = 1)
-                    Data[i][j] = Glucose;
-                else if (j = 2)
-                    Data[i][j] = BloodPressure;    
-                else if (j = 3)
-                    Data[i][j] = SkinThickness;    
-                else if (j = 4)
-                    Data[i][j] = Insulin;    
-                else if (j = 5)
-                    Data[i][j] = BMI;    
-                else if (j = 6)
-                    Data[i][j] = DiabetesPedigreeFunction;    
-                else if (j = 7)
-                    Data[i][j] = Age;  
-                else if (j = 8)
-                    Data[i][j] = Outcome;  
-            }
-        }
+        float Pregnancies_float = stof(Pregnancies_string);
+        float Glucose_float = stof(Glucose_string);
+        float BloodPressure_float = stof(BloodPressure_string);
+        float SkinThickness_float = stof(SkinThickness_string);
+        float Insulin_float = stof(Insulin_string);
+        float BMI_float = stof(BMI_string);
+        float DiabetesPedigreeFunction_float = stof(DiabetesPedigreeFunction_string);
+        float Age_float = stof(Age_string);
+        float Outcome_float = stof(Outcome_string);
 
-        for (int i = 0; i < 30; i ++)
-        {
-            for (int j = 0 ; j < 30; j ++)
-            {
-                if (j = 0)
-                    cout << "Pregnancies: ";
-                else if (j = 1)
-                    cout << "Glucose: ";
-                else if (j = 2)
-                    cout << "BloodPressure: ";
-                else if (j = 3)
-                    cout << "SkinThickness: ";
-                else if (j = 4)
-                    cout << "Insulin: ";
-                else if (j = 5)
-                    cout << "BMI: ";
-                else if (j = 6)
-                    cout << "DiabetesPedigreeFunction: ";
-                else if (j = 7)
-                    cout << "Age: ";
-                else if (j = 8)
-                    cout << "Outcome: ";
-
-                cout << Data[i][j] << '\n';
-            }
-            cout << "--------------------------------" << '\n';
-        }
-
-/*        
-        cout << "Pregnancies: " << Pregnancies << '\n';
-        cout << "Glucose: " << Glucose << '\n';
-        cout << "BloodPressure: " << BloodPressure << '\n';
-        cout << "SkinThickness: " << SkinThickness << '\n';
-        cout << "Insulin: " << Insulin << '\n';
-        cout << "BMI: " << BMI << '\n';
-        cout << "DiabetesPedigreeFunction: " << DiabetesPedigreeFunction << '\n';
-        cout << "Age: " << Age << '\n';
-        cout << "Outcome: " << Outcome << '\n';
-        cout << "--------------------------------" << '\n';
-*/
+        Data[i][0] = Pregnancies_float;
+        Data[i][1] = Glucose_float;
+        Data[i][2] = BloodPressure_float;    
+        Data[i][3] = SkinThickness_float;    
+        Data[i][4] = Insulin_float;    
+        Data[i][5] = BMI_float;    
+        Data[i][6] = DiabetesPedigreeFunction_float;    
+        Data[i][7] = Age_float;  
+        Data[i][8] = Outcome_float;  
+        
+        i ++;
     }
+/*
+    for (int i = 0; i < 2; i ++)
+    {
+        for (int j = 0 ; j < 9; j ++)
+        {
+            if (j = 0)
+                cout << "Pregnancies: " << Data[i][j];
+            else if (j = 1)
+                cout << "Glucose: " << Data[i][j];
+            else if (j = 2)
+                cout << "BloodPressure: " << Data[i][j];
+            else if (j = 3)
+                cout << "SkinThickness: " << Data[i][j];
+            else if (j = 4)
+                cout << "Insulin: " << Data[i][j];
+            else if (j = 5)
+                cout << "BMI: " << Data[i][j];
+            else if (j = 6)
+                cout << "DiabetesPedigreeFunction: " << Data[i][j];
+            else if (j = 7)
+                cout << "Age: " << Data[i][j];
+            else if (j = 8)
+                cout << "Outcome: " << Data[i][j];
+
+            cout << Data[i][j] << '\n';
+        }
+        cout << "--------------------------------" << '\n';
+    }
+*/
     ip.close();
 }
