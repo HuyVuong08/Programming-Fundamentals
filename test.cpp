@@ -3,10 +3,24 @@
 
 using namespace std;
 
+
+/*
+struct Record {
+    // TODO: Please define the detail struct for storing a record here
+    int count = 0;
+    float * pData = new float[count][9];
+    
+};
+
+void LoadData(const char*, void* &)
+{
+
+}
+*/
 int main(){
 
     int i = 0;
-    float Data[2][9];
+    float Data[2][9];    
 
     ifstream ip("diabetes.csv");
 
@@ -86,4 +100,6 @@ int main(){
     }
 */
     ip.close();
+
+    cout << Data[1][1];
 }
