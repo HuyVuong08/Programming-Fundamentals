@@ -91,13 +91,31 @@ void LoadData(const char* pFName, void* & pData)
     pData = &Data;
 }
 
-int main(){
-    void * pData;
+void ProcessRequest(const char* pRequest, void* pData, void* &pOutput, int& N)
+{
+    Record * Data = (struct Record *) pData;
+    cout << (*Data).Glucose[1] << endl;
+    if (pRequest == "CR")
+    {
+        pOutput = &(*Data).count;
+        int * out = (int *) pOutput;
+        cout << *out << endl;
+    }
+}
 
+int main(){
+    
+    int N;
+    void * pData, * pOutput;
+    char * pRequest = "CR";
     LoadData ("diabetes.csv", pData); 
-    Record * a;
-    a = (struct Record *) pData; 
-    cout << (*a).Glucose[1];
+
+    Record * Data;
+    Data = (struct Record *) pData;
+    cout << (*Data).count << endl;
+
+    ProcessRequest (pRequest, pData, pOutput, N);
+    
 
     return 0;
 }

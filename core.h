@@ -26,8 +26,20 @@ void ReleaseData(void* &);
 void ProcessRequest(const char* pRequest, void* pData, void* &pOutput, int &);
 void PrintOutput(const char* pRequest, void* pData, void* &pOutput, int);
 
+void CountLine (const char* FileName, int & count);
+
 struct Record {
     // TODO: Please define the detail struct for storing a record here
+    float Pregnancies [999];
+    float Glucose [999];
+    float BloodPressure [999];
+    float SkinThickness [999];
+    float Insulin [999];
+    float BMI [999];
+    float DiabetesPedigreeFunction [999];
+    float Age [999];
+    float Outcome [999];
+    int count = 0;
 };
 
 struct RecManager {
