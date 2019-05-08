@@ -114,7 +114,7 @@ int main(){
     Data = (int *) pOutput;
     cout << *Data << endl;
 */
-    if (pRequest == "DI")
+    if (pRequest[0] == 'D' && pRequest[1] == 'I')
     {
         cout << "abc";
     }
