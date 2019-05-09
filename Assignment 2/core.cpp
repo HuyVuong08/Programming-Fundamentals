@@ -102,6 +102,12 @@ void ProcessRequest(const char* pRequest, void* pData, void* &pOutput, int& N) {
     //       The data that you stored if pointed by pData.
     //       The output MUST BE STORED in the memory pointed by pOutput.
     //       N is the number of integers in the output.
+    Record * Data = (struct Record *) pData;
+    if (pRequest == "CR")
+    {
+        pOutput = &(*Data).count;
+        LengthOfInteger ((*Data).count, N);
+    }
 }
 
 void CountLine (const char* FileName, int & count)
@@ -116,3 +122,43 @@ void CountLine (const char* FileName, int & count)
     file.close();
 }
 
+void FindBracket (const char* pRequest, int Start, int &OpenPosition, int &ClosePosition)
+{
+    int i = Start;
+    OpenPosition = 0;
+    ClosePosition = 0;
+    while (pRequest[i] != '<')
+    {
+        i ++;
+    }
+    OpenPosition = i;
+    int j = OpenPosition;
+    while (pRequest[j] != '>')
+    {
+        j ++;
+    }
+    ClosePosition = j;
+}
+
+void ReadInfo (const char* pRequest, char* &CharOut, int Start)
+{
+    int OpenPosition, ClosePosition, start = 0, j = 0;
+    FindBracket (pRequest, start, OpenPosition, ClosePosition);
+    for (int i = OpenPosition + 1; i < ClosePosition; i++)
+    {
+        CharOut[j] = pRequest[i];
+        j ++;
+    }
+    CharOut[j+1] = '\0';
+}
+
+void LengthOfInteger (int Num, int &Length)
+{
+    int n = Num;
+    Length = 0;
+    while (n != 0)
+    {
+        n = n/10;
+        Length ++;
+    }
+}

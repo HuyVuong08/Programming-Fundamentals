@@ -27,6 +27,9 @@ void ProcessRequest(const char* pRequest, void* pData, void* &pOutput, int &);
 void PrintOutput(const char* pRequest, void* pData, void* &pOutput, int);
 
 void CountLine (const char* FileName, int & count);
+void ReadInfo (const char* pRequest, char* &CharOut, int Start);
+void FindBracket (const char* CharIn, int Start, int &OpenPosition, int &ClosePosition);
+void LengthOfInteger (int Num, int &Length);
 
 struct Record {
     // TODO: Please define the detail struct for storing a record here
