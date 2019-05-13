@@ -103,11 +103,29 @@ void ProcessRequest(const char* pRequest, void* pData, void* &pOutput, int& N) {
     //       The output MUST BE STORED in the memory pointed by pOutput.
     //       N is the number of integers in the output.
     Record * Data = (struct Record *) pData;
-    if (pRequest == "CR")
+    if (CR (pRequest))
     {
         pOutput = &(*Data).count;
         LengthOfInteger ((*Data).count, N);
     }
+    else if (DI (pRequest))
+    {
+        cout << "DI";
+    }
+    else if (HI (pRequest))
+    {
+        cout << "HI";
+    }
+    else if (FR (pRequest))
+    {
+        cout << "FR";
+    }
+    else if (FRLong (pRequest))
+    {
+        cout << "FR <>";
+    }
+    else 
+        cout << "Invalid Request!";
 }
 
 void CountLine (const char* FileName, int & count)
@@ -140,16 +158,19 @@ void FindBracket (const char* pRequest, int Start, int &OpenPosition, int &Close
     ClosePosition = j;
 }
 
-void ReadInfo (const char* pRequest, char* &CharOut, int Start)
+void ReadInfo (const char* pRequest, char* &CharOut, int Start, int &End)
 {
-    int OpenPosition, ClosePosition, start = 0, j = 0;
-    FindBracket (pRequest, start, OpenPosition, ClosePosition);
+    int OpenPosition = 3, ClosePosition = 5, j = 0, Length;
+    FindBracket (pRequest, Start, OpenPosition, ClosePosition);
+    Length = ClosePosition - OpenPosition;
+    CharOut = new char[Length];
     for (int i = OpenPosition + 1; i < ClosePosition; i++)
     {
-        CharOut[j] = pRequest[i];
-        j ++;
+      CharOut[j] = pRequest[i];
+       j ++;
     }
-    CharOut[j+1] = '\0';
+    CharOut[j] = '\0';
+    End = ClosePosition;
 }
 
 void LengthOfInteger (int Num, int &Length)
@@ -161,4 +182,91 @@ void LengthOfInteger (int Num, int &Length)
         n = n/10;
         Length ++;
     }
+}
+
+bool CR (const char * pRequest)
+{
+    int i = 0, j;
+    if (pRequest == "CR")
+        return true;
+
+    while (pRequest[i] != 'C' && pRequest[i] != '\0' && pRequest[i] == ' ')
+    {
+        i ++;
+    }
+    if (pRequest[i+1] == 'R')
+    {
+        j = i+2;
+        while (pRequest[j] == ' ')
+        {
+            j++;
+        }
+        if (pRequest[j] == '\0')
+            return true;
+    }
+        
+    return false;
+}
+
+bool DI (const char * pRequest)
+{
+    int i = 0;
+    while (pRequest[i] != 'D' && pRequest[i] != '\0' && pRequest[i] == ' ')
+    {
+        i ++;
+    }
+    if (pRequest[i+1] == 'I')
+        return true;
+    return false;
+}
+
+bool HI (const char * pRequest)
+{
+    int i = 0;
+    while (pRequest[i] != 'H' && pRequest[i] != '\0' && pRequest[i] == ' ')
+    {
+        i ++;
+    }
+    if (pRequest[i+1] == 'I')
+        return true;
+    return false;
+}
+
+bool FR (const char * pRequest)
+{
+    int i = 0, j;
+    if (pRequest == "FR")
+        return true;
+
+    while (pRequest[i] != 'F' && pRequest[i] != '\0' && pRequest[i] == ' ')
+    {
+        i ++;
+    }
+    if (pRequest[i+1] == 'R')
+    {
+        j = i+2;
+        while (pRequest[j] == ' ')
+        {
+            j++;
+        }
+        if (pRequest[j] == '\0')
+            return true;
+    }
+        
+    return false;
+}
+
+bool FRLong (const char * pRequest)
+{
+    int i = 0;
+    if (pRequest == "FR")
+        return false;
+
+    while (pRequest[i] != 'F' && pRequest[i] != '\0' && pRequest[i] == ' ')
+    {
+        i ++;
+    }
+    if (pRequest[i+1] == 'R')
+        return true;
+    return false;
 }
