@@ -37,7 +37,7 @@ void LoadData(const char* pFName, void* &pData) {
 
     CountLine (pFName, count);
     Record Data;
-    Data.count = count;
+    Data.size = count;
 
     ifstream ip(pFName);
 
@@ -102,25 +102,39 @@ void ProcessRequest(const char* pRequest, void* pData, void* &pOutput, int& N) {
     //       The data that you stored if pointed by pData.
     //       The output MUST BE STORED in the memory pointed by pOutput.
     //       N is the number of integers in the output.
-    Record * Data = (struct Record *) pData;
+    int End;
     if (CR (pRequest))
     {
-        pOutput = &(*Data).count;
-        LengthOfInteger ((*Data).count, N);
+        Record * Data = (struct Record *) pData;
+        pOutput = &(*Data).size;
+        LengthOfInteger ((*Data).size, N);
     }
-    else if (DI (pRequest))
+    else if (DI (pRequest, End))
     {
-        cout << "DI";
+        int End1, End2;
+        char * Field1, * Field2;
+        ReadInfo (pRequest, Field1, End, End1);
+        ReadInfo (pRequest, Field2, End1, End2);
+        DIProcess (pData, Field1, Field2, pOutput, N);
     }
-    else if (HI (pRequest))
+    else if (HI (pRequest, End))
     {
         cout << "HI";
+        int End1, End2, End3, End4;
+        char * Field1, * Field2, * Field3, * Field4;
+        ReadInfo (pRequest, Field1, End, End1);
+        ReadInfo (pRequest, Field2, End1, End2);
+        ReadInfo (pRequest, Field1, End2, End3);
+        ReadInfo (pRequest, Field2, End3, End4);
+        HIProcess (pData, Field1, Field2, Field3, Field4, pOutput, N);
     }
     else if (FR (pRequest))
     {
         cout << "FR";
+        FRProcess (pData, pOutput, N);
+
     }
-    else if (FRLong (pRequest))
+    else if (FRLong (pRequest, End))
     {
         cout << "FR <>";
     }
@@ -128,7 +142,7 @@ void ProcessRequest(const char* pRequest, void* pData, void* &pOutput, int& N) {
         cout << "Invalid Request!";
 }
 
-void CountLine (const char* FileName, int & count)
+void CountLine (const char* FileName, int& count)
 {
     count = 0;
     string line;
@@ -140,7 +154,7 @@ void CountLine (const char* FileName, int & count)
     file.close();
 }
 
-void FindBracket (const char* pRequest, int Start, int &OpenPosition, int &ClosePosition)
+void FindBracket (const char* pRequest, int Start, int& OpenPosition, int& ClosePosition)
 {
     int i = Start;
     OpenPosition = 0;
@@ -158,7 +172,7 @@ void FindBracket (const char* pRequest, int Start, int &OpenPosition, int &Close
     ClosePosition = j;
 }
 
-void ReadInfo (const char* pRequest, char* &CharOut, int Start, int &End)
+void ReadInfo (const char* pRequest, char* &CharOut, int Start, int& End)
 {
     int OpenPosition = 3, ClosePosition = 5, j = 0, Length;
     FindBracket (pRequest, Start, OpenPosition, ClosePosition);
@@ -173,7 +187,7 @@ void ReadInfo (const char* pRequest, char* &CharOut, int Start, int &End)
     End = ClosePosition;
 }
 
-void LengthOfInteger (int Num, int &Length)
+void LengthOfInteger (int Num, int& Length)
 {
     int n = Num;
     Length = 0;
@@ -208,7 +222,7 @@ bool CR (const char * pRequest)
     return false;
 }
 
-bool DI (const char * pRequest)
+bool DI (const char * pRequest, int& End)
 {
     int i = 0;
     while (pRequest[i] != 'D' && pRequest[i] != '\0' && pRequest[i] == ' ')
@@ -216,11 +230,18 @@ bool DI (const char * pRequest)
         i ++;
     }
     if (pRequest[i+1] == 'I')
+    {
+        while (pRequest[i + 2] == ' ')
+        {
+            i ++;
+        }
+        End = i + 2;
         return true;
+    }
     return false;
 }
 
-bool HI (const char * pRequest)
+bool HI (const char * pRequest, int& End)
 {
     int i = 0;
     while (pRequest[i] != 'H' && pRequest[i] != '\0' && pRequest[i] == ' ')
@@ -228,7 +249,14 @@ bool HI (const char * pRequest)
         i ++;
     }
     if (pRequest[i+1] == 'I')
+    {
+        while (pRequest[i + 2] == ' ')
+        {
+            i ++;
+        }
+            End = i + 2;
         return true;
+    }
     return false;
 }
 
@@ -256,7 +284,7 @@ bool FR (const char * pRequest)
     return false;
 }
 
-bool FRLong (const char * pRequest)
+bool FRLong (const char * pRequest, int& End)
 {
     int i = 0;
     if (pRequest == "FR")
@@ -267,6 +295,163 @@ bool FRLong (const char * pRequest)
         i ++;
     }
     if (pRequest[i+1] == 'R')
+        {
+        while (pRequest[i + 2] == ' ')
+        {
+            i ++;
+        }
+            End = i + 2;
         return true;
+    }
     return false;
 }
+
+void Mean (const float * array, const int size, float& result)
+{
+    result = 0.0;
+    for (int i = 0; i < size; i ++)
+    {
+        result += array[i];
+    }
+    result /= size;
+}
+
+void StandardDeviation (const float * array, const int size, float& result)
+{
+    float sum = 0.0, mean, variance = 0.0, stdDeviation;
+    
+    for(int i = 0; i < 5; ++i)
+        sum += array[i];
+    
+    mean = sum/5;
+
+    for(int i = 0; i < 5; ++i)
+        variance += pow(array[i] - mean, 2);
+    
+    variance=variance/5;
+    stdDeviation = sqrt(variance);
+    
+    result = stdDeviation;
+}
+
+void Min (const float * array, const int size, float& result)
+{
+    result = array[0];
+    for (int i = 0; i < size; i ++)
+    {
+        if (result > array[i])
+            result = array[i];
+    }
+}
+
+void Max (const float * array, const int size, float& result)
+{
+    result = array[0];
+    for (int i = 0; i < size; i ++)
+    {
+        if (result < array[i])
+            result = array[i];
+    }
+}
+
+void DIProcess (void * pData, const char * Field1, const char * Field2, void* &pOutput, int& N)
+{
+    Record * Data = (struct Record *)pData;
+    float result = 0;
+    if (strcmp("Mean", Field1) == 0)
+    {
+        if (Field2 == "Pregnancies")
+            Mean ((*Data).Pregnancies, (*Data).size, result);
+        else if (Field2 == "Glucose")
+            Mean ((*Data).Glucose, (*Data).size, result);
+        else if (Field2 == "BloodPressure")
+            Mean ((*Data).BloodPressure, (*Data).size, result);
+        else if (Field2 == "SkinThickness")
+            Mean ((*Data).SkinThickness, (*Data).size, result);
+        else if (Field2 == "Insulin")
+            Mean ((*Data).Insulin, (*Data).size, result);
+        else if (Field2 == "BMI")
+            Mean ((*Data).BMI, (*Data).size, result);
+        else if (Field2 == "DiabetesPedigreeFunction")
+            Mean ((*Data).DiabetesPedigreeFunction, (*Data).size, result);
+        else if (strcmp("Age", Field2) == 0)
+            Mean ((*Data).Age, (*Data).size, result);
+        else if (Field2 == "Outcome")
+            Mean ((*Data).Outcome, (*Data).size, result);
+    }
+    else if (strcmp("StandardDeviation", Field1) == 0)
+    {
+        if (Field2 == "Pregnancies")
+            StandardDeviation ((*Data).Pregnancies, (*Data).size, result);
+        else if (Field2 == "Glucose")
+            StandardDeviation ((*Data).Glucose, (*Data).size, result);
+        else if (Field2 == "BloodPressure")
+            StandardDeviation ((*Data).BloodPressure, (*Data).size, result);
+        else if (Field2 == "SkinThickness")
+            StandardDeviation ((*Data).SkinThickness, (*Data).size, result);
+        else if (Field2 == "Insulin")
+            StandardDeviation ((*Data).Insulin, (*Data).size, result);
+        else if (Field2 == "BMI")
+            StandardDeviation ((*Data).BMI, (*Data).size, result);
+        else if (Field2 == "DiabetesPedigreeFunction")
+            StandardDeviation ((*Data).DiabetesPedigreeFunction, (*Data).size, result);
+        else if (strcmp("Age", Field2) == 0)
+            StandardDeviation ((*Data).Age, (*Data).size, result);
+        else if (Field2 == "Outcome")
+            StandardDeviation ((*Data).Outcome, (*Data).size, result);
+    }
+    else if (strcmp("Min", Field1) == 0)
+    {
+        if (Field2 == "Pregnancies")
+            Min ((*Data).Pregnancies, (*Data).size, result);
+        else if (Field2 == "Glucose")
+            Min ((*Data).Glucose, (*Data).size, result);
+        else if (Field2 == "BloodPressure")
+            Min ((*Data).BloodPressure, (*Data).size, result);
+        else if (Field2 == "SkinThickness")
+            Min ((*Data).SkinThickness, (*Data).size, result);
+        else if (Field2 == "Insulin")
+            Min ((*Data).Insulin, (*Data).size, result);
+        else if (Field2 == "BMI")
+            Min ((*Data).BMI, (*Data).size, result);
+        else if (Field2 == "DiabetesPedigreeFunction")
+            Min ((*Data).DiabetesPedigreeFunction, (*Data).size, result);
+        else if (strcmp("Age", Field2) == 0)
+            Min ((*Data).Age, (*Data).size, result);
+        else if (Field2 == "Outcome")
+            Min ((*Data).Outcome, (*Data).size, result);
+    }
+    else if (strcmp("Max", Field1) == 0)
+    {
+        if (Field2 == "Pregnancies")
+            Max ((*Data).Pregnancies, (*Data).size, result);
+        else if (Field2 == "Glucose")
+            Max ((*Data).Glucose, (*Data).size, result);
+        else if (Field2 == "BloodPressure")
+            Max ((*Data).BloodPressure, (*Data).size, result);
+        else if (Field2 == "SkinThickness")
+            Max ((*Data).SkinThickness, (*Data).size, result);
+        else if (Field2 == "Insulin")
+            Min ((*Data).Insulin, (*Data).size, result);
+        else if (Field2 == "BMI")
+            Max ((*Data).BMI, (*Data).size, result);
+        else if (Field2 == "DiabetesPedigreeFunction")
+            Max ((*Data).DiabetesPedigreeFunction, (*Data).size, result);
+        else if (strcmp("Age", Field2) == 0)
+            Max ((*Data).Age, (*Data).size, result);
+        else if (Field2 == "Outcome")
+            Max ((*Data).Outcome, (*Data).size, result);
+    }
+    pOutput = &result;
+}
+
+void HIProcess (void * pData, const char * Field1, const char * Field2, const char * Field3, const char * Field4, void* &pOutput, int& N)
+{
+
+}
+
+void FRProcess (void * pData, void* &pOutput, int& N)
+{
+    
+}
+

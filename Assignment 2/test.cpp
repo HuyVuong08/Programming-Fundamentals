@@ -15,16 +15,14 @@
 using namespace std;
 
 int main() {
-    char *pRequest = "DI <MEAN> <Age>", * CharOut;
+    char *pRequest = "DI <Max> <Age>", * CharOut;
     void * pData, *pOutput;
     int N, Start = 0, End = 0;
+    float * result;
+    Record * Data;
     LoadData ("diabetes.csv", pData);
     ProcessRequest(pRequest, pData, pOutput, N);
-/*
-    ReadInfo (pRequest, CharOut, Start, End);
-    cout << CharOut << endl << End;
-    ReadInfo (pRequest, CharOut, 8, End);
-    cout << CharOut << endl << End;
-*/
+    result = (float *)pOutput;
+    cout << *result << endl << N;
     return 0;
 }

@@ -26,19 +26,29 @@ void ReleaseData(void* &);
 void ProcessRequest(const char* pRequest, void* pData, void* &pOutput, int &);
 void PrintOutput(const char* pRequest, void* pData, void* &pOutput, int);
 
-void CountLine (const char* FileName, int & count);
-void ReadInfo (const char* pRequest, char* &CharOut, int Start, int &End);
-void FindBracket (const char* CharIn, int Start, int &OpenPosition, int &ClosePosition);
-void LengthOfInteger (int Num, int &Length);
+void CountLine (const char* FileName, int& count);
+void ReadInfo (const char* pRequest, char* &CharOut, int Start, int& End);
+void FindBracket (const char* CharIn, int Start, int& OpenPosition, int& ClosePosition);
+void LengthOfInteger (int Num, int& Length);
+
 bool CR (const char * pRequest);
-bool DI (const char * pRequest);
-bool HI (const char * pRequest);
+bool DI (const char * pRequest, int& End);
+bool HI (const char * pRequest, int& End);
 bool FR (const char * pRequest);
-bool FRLong (const char * pRequest);
+bool FRLong (const char * pRequest, int& End);
+
+void Mean (const float * array, const int size, float& result);
+void StandardDeviation (const float * array, const int size, float& result);
+void Min (const float * array, const int size, float& result);
+void Max (const float * array, const int size, float& result);
+
+void DIProcess (void * pData, const char * Field1, const char * Field2, void* &pOutput, int& N);
+void HIProcess (void * pData, const char * Field1, const char * Field2, const char * Field3, const char * Field4, void* &pOutput, int& N);
+void FRProcess (void * pData, void* &pOutput, int& N);
 
 struct Record {
     // TODO: Please define the detail struct for storing a record here
-    int count = 0;
+    int size = 0;
     float Pregnancies [999];
     float Glucose [999];
     float BloodPressure [999];
