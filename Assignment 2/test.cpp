@@ -25,13 +25,12 @@ int main() {
     LoadData("diabetes.csv", pData);
 
     string req;
-    req = "DI <Mean> <Age>";
+    req = "HI <Age> <0> <100> <10>";
 
     ProcessRequest(req.data(), pData, pOutput, N);
     PrintOutput(req.data(), pData, pOutput, N);
 
     ReleaseData(pData);
-
     //Finalization();
 
     return 0;

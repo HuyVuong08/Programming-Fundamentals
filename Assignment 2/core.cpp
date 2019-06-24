@@ -137,8 +137,8 @@ void ProcessRequest(const char* pRequest, void* pData, void* &pOutput, int& N)
         char * Field1, * Field2, * Field3, * Field4;
         ReadInfo (pRequest, Field1, End, End1);
         ReadInfo (pRequest, Field2, End1, End2);
-        ReadInfo (pRequest, Field1, End2, End3);
-        ReadInfo (pRequest, Field2, End3, End4);
+        ReadInfo (pRequest, Field3, End2, End3);
+        ReadInfo (pRequest, Field4, End3, End4);
         HIProcess (Data, Field1, Field2, Field3, Field4, pOutput, N);
     }
     else if (FR (pRequest))
@@ -148,6 +148,12 @@ void ProcessRequest(const char* pRequest, void* pData, void* &pOutput, int& N)
     }
     else if (FRLong (pRequest, End))
     {
+        int End1, End2, End3;
+        char * Field1, * Field2, * Field3, * Field4;
+        ReadInfo (pRequest, Field1, End, End1);
+        ReadInfo (pRequest, Field2, End1, End2);
+        ReadInfo (pRequest, Field3, End2, End3);
+        FRLongProcess (Data, Field1, Field2, Field3, pOutput, N);
     }
     else 
         cout << "Invalid Request!";
@@ -328,19 +334,20 @@ bool FRLong (const char * pRequest, int& End)
     return false;
 }
 
-void Mean (const float * array, const int size, float& result)
+void Mean (const float * array, const int size, int& result)
 {
-    result = 0.0;
+    float result_float = 0.0;
     for (int i = 0; i < size; i ++)
     {
-        result += array[i];
+        result_float += array[i];
     }
-    result /= size;
+    result_float /= size;
+    result = result_float;
 }
 
-void StandardDeviation (const float * array, const int size, float& result)
+void StandardDeviation (const float * array, const int size, int& result)
 {
-    float sum = 0.0, mean, variance = 0.0, stdDeviation;
+    float sum = 0.0, mean, variance = 0.0, stdDeviation, result_float;
     
     for(int i = 0; i < 5; ++i)
         sum += array[i];
@@ -353,125 +360,286 @@ void StandardDeviation (const float * array, const int size, float& result)
     variance=variance/5;
     stdDeviation = sqrt(variance);
     
-    result = stdDeviation;
+    result_float = stdDeviation;
+    result = result_float;
 }
 
-void Min (const float * array, const int size, float& result)
+void Min (const float * array, const int size, int& result)
 {
-    result = array[0];
+    float result_float = array[0];
     for (int i = 0; i < size; i ++)
     {
-        if (result > array[i])
-            result = array[i];
+        if (result_float > array[i])
+            result_float = array[i];
     }
+    result = result_float;
 }
 
-void Max (const float * array, const int size, float& result)
+void Max (const float * array, const int size, int& result)
 {
-    result = array[0];
+    float result_float = array[0];
     for (int i = 0; i < size; i ++)
     {
-        if (result < array[i])
-            result = array[i];
+        if (result_float < array[i])
+            result_float = array[i];
     }
+    result = result_float;
 }
 
 void DIProcess (Record * Data, const char * Field1, const char * Field2, void* &pOutput, int& N)
 {
-    float result = 0;
-    int result_int;
+    int result = 0;
     if (strcmp("Mean", Field1) == 0)
     {
-        if (Field2 == "Pregnancies")
+        if (strcmp("Pregnancies", Field2) == 0)
             Mean ((*Data).Pregnancies, (*Data).size, result);
-        else if (Field2 == "Glucose")
+        else if (strcmp("Glucose", Field2) == 0)
             Mean ((*Data).Glucose, (*Data).size, result);
-        else if (Field2 == "BloodPressure")
+        else if (strcmp("BloodPressure", Field2) == 0)
             Mean ((*Data).BloodPressure, (*Data).size, result);
-        else if (Field2 == "SkinThickness")
+        else if (strcmp("SkinThickness", Field2) == 0)
             Mean ((*Data).SkinThickness, (*Data).size, result);
-        else if (Field2 == "Insulin")
+        else if (strcmp("Insulin", Field2) == 0)
             Mean ((*Data).Insulin, (*Data).size, result);
-        else if (Field2 == "BMI")
+        else if (strcmp("BMI", Field2) == 0)
             Mean ((*Data).BMI, (*Data).size, result);
-        else if (Field2 == "DiabetesPedigreeFunction")
+        else if (strcmp("DiabetesPedigreeFunction", Field2) == 0)
             Mean ((*Data).DiabetesPedigreeFunction, (*Data).size, result);
         else if (strcmp("Age", Field2) == 0)
             Mean ((*Data).Age, (*Data).size, result);
-        else if (Field2 == "Outcome")
+        else if (strcmp("Outcome", Field2) == 0)
             Mean ((*Data).Outcome, (*Data).size, result);
     }
     else if (strcmp("StandardDeviation", Field1) == 0)
     {
-        if (Field2 == "Pregnancies")
+        if (strcmp("Pregnancies", Field2) == 0)
             StandardDeviation ((*Data).Pregnancies, (*Data).size, result);
-        else if (Field2 == "Glucose")
+        else if (strcmp("Glucose", Field2) == 0)
             StandardDeviation ((*Data).Glucose, (*Data).size, result);
-        else if (Field2 == "BloodPressure")
+        else if (strcmp("BloodPressure", Field2) == 0)
             StandardDeviation ((*Data).BloodPressure, (*Data).size, result);
-        else if (Field2 == "SkinThickness")
+        else if (strcmp("SkinThickness", Field2) == 0)
             StandardDeviation ((*Data).SkinThickness, (*Data).size, result);
-        else if (Field2 == "Insulin")
+        else if (strcmp("Insulin", Field2) == 0)
             StandardDeviation ((*Data).Insulin, (*Data).size, result);
-        else if (Field2 == "BMI")
+        else if (strcmp("BMI", Field2) == 0)
             StandardDeviation ((*Data).BMI, (*Data).size, result);
-        else if (Field2 == "DiabetesPedigreeFunction")
+        else if (strcmp("DiabetesPedigreeFunction", Field2) == 0)
             StandardDeviation ((*Data).DiabetesPedigreeFunction, (*Data).size, result);
         else if (strcmp("Age", Field2) == 0)
             StandardDeviation ((*Data).Age, (*Data).size, result);
-        else if (Field2 == "Outcome")
+        else if (strcmp("Outcome", Field2) == 0)
             StandardDeviation ((*Data).Outcome, (*Data).size, result);
     }
     else if (strcmp("Min", Field1) == 0)
     {
-        if (Field2 == "Pregnancies")
+        if (strcmp("Pregnancies", Field2) == 0)
             Min ((*Data).Pregnancies, (*Data).size, result);
-        else if (Field2 == "Glucose")
+        else if (strcmp("Glucose", Field2) == 0)
             Min ((*Data).Glucose, (*Data).size, result);
-        else if (Field2 == "BloodPressure")
+        else if (strcmp("BloodPressure", Field2) == 0)
             Min ((*Data).BloodPressure, (*Data).size, result);
-        else if (Field2 == "SkinThickness")
+        else if (strcmp("SkinThickness", Field2) == 0)
             Min ((*Data).SkinThickness, (*Data).size, result);
-        else if (Field2 == "Insulin")
+        else if (strcmp("Insulin", Field2) == 0)
             Min ((*Data).Insulin, (*Data).size, result);
-        else if (Field2 == "BMI")
+        else if (strcmp("BMI", Field2) == 0)
             Min ((*Data).BMI, (*Data).size, result);
-        else if (Field2 == "DiabetesPedigreeFunction")
+        else if (strcmp("DiabetesPedigreeFunction", Field2) == 0)
             Min ((*Data).DiabetesPedigreeFunction, (*Data).size, result);
         else if (strcmp("Age", Field2) == 0)
             Min ((*Data).Age, (*Data).size, result);
-        else if (Field2 == "Outcome")
+        else if (strcmp("Outcome", Field2) == 0)
             Min ((*Data).Outcome, (*Data).size, result);
     }
     else if (strcmp("Max", Field1) == 0)
     {
-        if (Field2 == "Pregnancies")
+        if (strcmp("Pregnancies", Field2) == 0)
             Max ((*Data).Pregnancies, (*Data).size, result);
-        else if (Field2 == "Glucose")
+        else if (strcmp("Glucose", Field2) == 0)
             Max ((*Data).Glucose, (*Data).size, result);
-        else if (Field2 == "BloodPressure")
+        else if (strcmp("BloodPressure", Field2) == 0)
             Max ((*Data).BloodPressure, (*Data).size, result);
-        else if (Field2 == "SkinThickness")
+        else if (strcmp("SkinThickness", Field2) == 0)
             Max ((*Data).SkinThickness, (*Data).size, result);
-        else if (Field2 == "Insulin")
-            Min ((*Data).Insulin, (*Data).size, result);
-        else if (Field2 == "BMI")
+        else if (strcmp("Insulin", Field2) == 0)
+            Max ((*Data).Insulin, (*Data).size, result);
+        else if (strcmp("BMI", Field2) == 0)
             Max ((*Data).BMI, (*Data).size, result);
-        else if (Field2 == "DiabetesPedigreeFunction")
+        else if (strcmp("DiabetesPedigreeFunction", Field2) == 0)
             Max ((*Data).DiabetesPedigreeFunction, (*Data).size, result);
         else if (strcmp("Age", Field2) == 0)
             Max ((*Data).Age, (*Data).size, result);
-        else if (Field2 == "Outcome")
+        else if (strcmp("Outcome", Field2) == 0)
             Max ((*Data).Outcome, (*Data).size, result);
     }
-    result_int = (int)result;
-    pOutput = &result_int;
-    cout << *(int *)pOutput;
+    pOutput = &result;
+}
+
+void SizeOfHistogram (const int min, const int max, const int bin, int& size)
+{
+    int range = max - min;
+    
+    if (range%bin != 0)
+        size = range/bin + 1;
+    else 
+        size = range/bin;
+    return;
 }
 
 void HIProcess (Record * Data, const char * Field1, const char * Field2, const char * Field3, const char * Field4, void* &pOutput, int& N)
 {
+    int min, max, bin, size;
 
+    CharToInt (Field2, min);
+    CharToInt (Field3, max);
+    CharToInt (Field4, bin);
+
+    SizeOfHistogram (min, max, bin, size);
+    int * Output = new int [size];
+
+    for (int i = 0; i < size; i ++)
+        Output[i] = 0;
+
+    if (strcmp("Pregnancies", Field1) == 0)
+    {
+        for (int i = 0; i < size; i ++)
+        {
+            int Local_min = i * bin;
+            int Local_max = (i + 1) * bin;
+
+            for (int j = 0; j < (*Data).size; j ++)
+            {
+                int value = (*Data).Pregnancies[j];
+                if (value >= Local_min && value <= Local_max)
+                    Output[i] ++;
+            }    
+        }
+    }
+    else if (strcmp("Glucose", Field1) == 0)
+    {
+        for (int i = 0; i < size; i ++)
+        {
+            int Local_min = i * bin;
+            int Local_max = (i + 1) * bin;
+
+            for (int j = 0; j < (*Data).size; j ++)
+            {
+                int value = (*Data).Glucose[j];
+                if (value >= Local_min && value <= Local_max)
+                    Output[i] ++;
+            }    
+        }
+    }   
+    else if (strcmp("BloodPressure", Field1) == 0)
+    {
+        for (int i = 0; i < size; i ++)
+        {
+            int Local_min = i * bin;
+            int Local_max = (i + 1) * bin;
+
+            for (int j = 0; j < (*Data).size; j ++)
+            {
+                int value = (*Data).BloodPressure[j];
+                if (value >= Local_min && value <= Local_max)
+                    Output[i] ++;
+            }   
+        }
+    }
+    else if (strcmp("SkinThickness", Field1) == 0)
+    {
+        for (int i = 0; i < size; i ++)
+        {
+            int Local_min = i * bin;
+            int Local_max = (i + 1) * bin;
+
+            for (int j = 0; j < (*Data).size; j ++)
+            {
+                int value = (*Data).SkinThickness[j];
+                if (value >= Local_min && value <= Local_max)
+                    Output[i] ++;
+            }   
+        }
+    }
+    else if (strcmp("Insulin", Field1) == 0)
+    {
+        for (int i = 0; i < size; i ++)
+        {
+            int Local_min = i * bin;
+            int Local_max = (i + 1) * bin;
+
+            for (int j = 0; j < (*Data).size; j ++)
+            {
+                int value = (*Data).Insulin[j];
+                if (value >= Local_min && value <= Local_max)
+                    Output[i] ++;
+            }   
+        }
+    }
+    else if (strcmp("BMI", Field1) == 0)
+    {
+        for (int i = 0; i < size; i ++)
+        {
+            int Local_min = i * bin;
+            int Local_max = (i + 1) * bin;
+
+            for (int j = 0; j < (*Data).size; j ++)
+            {
+                int value = (*Data).BMI[j];
+                if (value >= Local_min && value <= Local_max)
+                    Output[i] ++;
+            }   
+        }
+    }
+    else if (strcmp("DiabetesPedigreeFunction", Field1) == 0)
+    {
+        for (int i = 0; i < size; i ++)
+        {
+            int Local_min = i * bin;
+            int Local_max = (i + 1) * bin;
+
+            for (int j = 0; j < (*Data).size; j ++)
+            {
+                int value = (*Data).DiabetesPedigreeFunction[j];
+                if (value >= Local_min && value <= Local_max)
+                    Output[i] ++;
+            }   
+        }
+    }
+    else if (strcmp("Age", Field1) == 0)
+    {
+        for (int i = 0; i < size; i ++)
+        {
+            int Local_min = i * bin;
+            int Local_max = (i + 1) * bin;
+
+            for (int j = 0; j < (*Data).size; j ++)
+            {
+                int value = (*Data).Age[j];
+                if (value >= Local_min && value <= Local_max)
+                    Output[i] ++;
+            }   
+        }
+    }
+    else if (strcmp("Outcome", Field1) == 0)
+    {
+        for (int i = 0; i < size; i ++)
+        {
+            int Local_min = i * bin;
+            int Local_max = (i + 1) * bin;
+
+            for (int j = 0; j < (*Data).size; j ++)
+            {
+                int value = (*Data).Outcome[j];
+                if (value >= Local_min && value <= Local_max)
+                    Output[i] ++;
+            }   
+        }
+    }
+
+    pOutput = Output;
+    N = size;
+    return;
 }
 
 void CountOutcome (const float * array, int size,  int& count)
@@ -486,8 +654,183 @@ void CountOutcome (const float * array, int size,  int& count)
 
 void FRProcess (Record * Data, void* &pOutput, int& N)
 {
-    int count;
+    int count, j = 0;
     CountOutcome ((*Data).Outcome, (*Data).size, count);
-    cout << count;
+    N = count;
+    int * Output = new int [count];
+    for (int i = 0; i < (*Data).size; i ++)
+    {
+        if ((*Data).Outcome[i] == 1)
+        {
+            Output[j] = i;
+            j ++;
+        }
+    }
+    pOutput = Output;
+}
+
+void CountIntervalOutcome (const float * array, const float * Field, const int min, const int max, int size,  int& count)
+{
+    int Field_int;
+    count = 0;
+    for (int i = 0; i < size; i ++)
+    {
+        Field_int = Field[i];
+        if (array[i] == 1 && Field_int > min && Field_int < max )
+            count ++;
+    }
+}
+
+void CharToInt (const char * Char, int& Int)
+{
+    Int = 0;
+    for (int i = 0; Char[i] != '\0'; i ++)
+    {
+        Int = (Char[i] - '0') + Int*10;
+    }
+}
+
+bool isInteger (const char * Char)
+{
+    for (int i = 0; Char[i] != '\0'; i ++)
+    {
+        if (Char[i] > '9' && Char[i] < '0')
+            return false;
+    }
+}
+
+void FRLongProcess (Record * Data, const char * Field1, const char * Field2, const char * Field3, void* &pOutput, int& N)
+{
+    int count, j = 0, min, max;
+
+    CharToInt (Field2, min);
+    CharToInt (Field3, max);
+
+    if (strcmp("Pregnancies", Field1) == 0)
+        CountIntervalOutcome ((*Data).Outcome, (*Data).Pregnancies, min, max, (*Data).size, count);
+    else if (strcmp("Glucose", Field1) == 0)
+        CountIntervalOutcome ((*Data).Outcome, (*Data).Glucose, min, max, (*Data).size, count);
+    else if (strcmp("BloodPressure", Field1) == 0)
+        CountIntervalOutcome ((*Data).Outcome, (*Data).BloodPressure, min, max, (*Data).size, count);
+    else if (strcmp("SkinThickness", Field1) == 0)
+        CountIntervalOutcome ((*Data).Outcome, (*Data).SkinThickness, min, max, (*Data).size, count);
+    else if (strcmp("Insulin", Field1) == 0)
+        CountIntervalOutcome ((*Data).Outcome, (*Data).Insulin, min, max, (*Data).size, count);
+    else if (strcmp("BMI", Field1) == 0)
+        CountIntervalOutcome ((*Data).Outcome, (*Data).BMI, min, max, (*Data).size, count);
+    else if (strcmp("DiabetesPedigreeFunction", Field1) == 0)
+        CountIntervalOutcome ((*Data).Outcome, (*Data).DiabetesPedigreeFunction, min, max, (*Data).size, count);
+    else if (strcmp("Age", Field1) == 0)
+        CountIntervalOutcome ((*Data).Outcome, (*Data).Age, min, max, (*Data).size, count);
+
+    N = count;
+    int * Output = new int [count];
+    
+    if (strcmp("Pregnancies", Field1) == 0)
+    {
+        int value;
+        for (int i = 0; i < (*Data).size; i ++)
+        {
+            value = (*Data).Pregnancies[i];
+            if ((*Data).Outcome[i] == 1 && value > min && value < max)
+            {
+                Output[j] = i;
+                j ++;
+            }
+        }
+    }
+    else if (strcmp("Glucose", Field1) == 0)
+    {
+        int value;
+        for (int i = 0; i < (*Data).size; i ++)
+        {
+            value = (*Data).Glucose[i];
+            if ((*Data).Outcome[i] == 1 && value > min && value < max)
+            {
+                Output[j] = i;
+                j ++;
+            }
+        }
+    }
+    else if (strcmp("BloodPressure", Field1) == 0)
+    {
+        int value;
+        for (int i = 0; i < (*Data).size; i ++)
+        {
+            value = (*Data).BloodPressure[i];
+            if ((*Data).Outcome[i] == 1 && value > min && value < max)
+            {
+                Output[j] = i;
+                j ++;
+            }
+        }
+    }
+    else if (strcmp("SkinThickness", Field1) == 0)
+    {
+        int value;
+        for (int i = 0; i < (*Data).size; i ++)
+        {
+            value = (*Data).SkinThickness[i];
+            if ((*Data).Outcome[i] == 1 && value > min && value < max)
+            {
+                Output[j] = i;
+                j ++;
+            }
+        }
+    }
+    else if (strcmp("Insulin", Field1) == 0)
+    {
+        int value;
+        for (int i = 0; i < (*Data).size; i ++)
+        {
+            value = (*Data).Insulin[i];
+            if ((*Data).Outcome[i] == 1 && value > min && value < max)
+            {
+                Output[j] = i;
+                j ++;
+            }
+        }
+    }
+    else if (strcmp("BMI", Field1) == 0)
+    {
+        int value;
+        for (int i = 0; i < (*Data).size; i ++)
+        {
+            value = (*Data).BMI[i];
+            if ((*Data).Outcome[i] == 1 && value > min && value < max)
+            {
+                Output[j] = i;
+                j ++;
+            }
+        }
+    }
+    else if (strcmp("DiabetesPedigreeFunction", Field1) == 0)
+    {
+        int value;
+        for (int i = 0; i < (*Data).size; i ++)
+        {
+            value = (*Data).DiabetesPedigreeFunction[i];
+            if ((*Data).Outcome[i] == 1 && value > min && value < max)
+            {
+                Output[j] = i;
+                j ++;
+            }
+        }
+    }
+    else if (strcmp("Age", Field1) == 0)
+    {
+        int value;
+        for (int i = 0; i < (*Data).size; i ++)
+        {
+            value = (*Data).Age[i];
+            if ((*Data).Outcome[i] == 1 && value > min && value < max)
+            {
+                Output[j] = i;
+                j ++;
+            }
+        }
+    }
+
+    pOutput = Output;
 }
 

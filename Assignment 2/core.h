@@ -38,17 +38,21 @@ bool HI (const char * pRequest, int& End);
 bool FR (const char * pRequest);
 bool FRLong (const char * pRequest, int& End);
 
-void Mean (const float * array, const int size, float& result);
-void StandardDeviation (const float * array, const int size, float& result);
-void Min (const float * array, const int size, float& result);
-void Max (const float * array, const int size, float& result);
+void Mean (const float * array, const int size, int& result);
+void StandardDeviation (const float * array, const int size, int& result);
+void Min (const float * array, const int size, int& result);
+void Max (const float * array, const int size, int& result);
 
 void DIProcess (Record * Data, const char * Field1, const char * Field2, void* &pOutput, int& N);
 void HIProcess (Record * Data, const char * Field1, const char * Field2, const char * Field3, const char * Field4, void* &pOutput, int& N);
 void FRProcess (Record * Data, void* &pOutput, int& N);
+void FRLongProcess (Record * Data, const char * Field1, const char * Field2, const char * Field3, void* &pOutput, int& N);
 
+void SizeOfHistogram (const int min, const int max, const int bin, int& size);
 void CountOutcome (const float * array, int size,  int& count);
-
+void CountIntervalOutcome (const float * array, const float * Field, const int min, const int max, int size,  int& count);
+bool isInteger (const char * Char);
+void CharToInt (const char * Char, int& Int);
 
 struct Record {
     // TODO: Please define the detail struct for storing a record here
