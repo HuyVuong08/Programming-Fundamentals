@@ -179,7 +179,7 @@ void RecordInitialize (struct Record& Data)
 
 void CountLine (const char* FileName, int& count)
 {
-    count = 0;
+    count = -1;
     string line;
 
     ifstream file(FileName);
