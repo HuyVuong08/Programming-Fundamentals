@@ -190,18 +190,18 @@ void CountLine (const char* FileName, int& count)
     return;
 }
 
-void FindBracket (const char* pRequest, int Start, int& OpenPosition, int& ClosePosition)
+void FindValue (const char* pRequest, int Start, int& OpenPosition, int& ClosePosition)
 {
     int i = Start;
     OpenPosition = 0;
     ClosePosition = 0;
-    while (pRequest[i] != '<')
+    while (pRequest[i] != ' ')
     {
         i ++;
     }
     OpenPosition = i;
-    int j = OpenPosition;
-    while (pRequest[j] != '>')
+    int j = OpenPosition + 1;
+    while (pRequest[j] != ' ')
     {
         j ++;
     }
@@ -211,7 +211,7 @@ void FindBracket (const char* pRequest, int Start, int& OpenPosition, int& Close
 void ReadInfo (const char* pRequest, char* &CharOut, int Start, int& End)
 {
     int OpenPosition = 3, ClosePosition = 5, j = 0, Length;
-    FindBracket (pRequest, Start, OpenPosition, ClosePosition);
+    FindValue (pRequest, Start, OpenPosition, ClosePosition);
     Length = ClosePosition - OpenPosition;
     CharOut = new char[Length];
     for (int i = OpenPosition + 1; i < ClosePosition; i++)
@@ -277,11 +277,7 @@ bool HI (const char * pRequest, int& End)
     if (pRequest[i] == 'H' && pRequest[i+1] == 'I')
     {
         j = i + 2;
-        while (pRequest[j] == ' ')
-        {
-            j ++;
-        }
-            End = j;
+        End = j;
         return true;
     }
     return false;

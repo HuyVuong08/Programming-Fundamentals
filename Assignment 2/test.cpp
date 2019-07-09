@@ -25,7 +25,7 @@ int main() {
     LoadData("diabetes.csv", pData);
 
     string req;
-    req = "HI <Age> <0> <100> <10>";
+    req = "HI Age 0 100 10";
 
     ProcessRequest(req.data(), pData, pOutput, N);
     PrintOutput(req.data(), pData, pOutput, N);

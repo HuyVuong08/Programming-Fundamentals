@@ -30,7 +30,7 @@ void RecordInitialize (struct Record& Data);
 
 void CountLine (const char* FileName, int& count);
 void ReadInfo (const char* pRequest, char* &CharOut, int Start, int& End);
-void FindBracket (const char* CharIn, int Start, int& OpenPosition, int& ClosePosition);
+void FindValue (const char* CharIn, int Start, int& OpenPosition, int& ClosePosition);
 
 bool CR (const char * pRequest);
 bool DI (const char * pRequest, int& End);
